@@ -1,5 +1,4 @@
 from .powermeter import PowerMeter
-from pyvisa import ResourceManager
 
 class KeysightU2004B(PowerMeter):
     def __init__(self, resource_name):

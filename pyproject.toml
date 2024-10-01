@@ -17,5 +17,8 @@ classifiers=[
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "pyvisa"
+    "pyvisa",
+    "pyvisa-py",
+    "psutil",
+    "zeroconf"
 ]
