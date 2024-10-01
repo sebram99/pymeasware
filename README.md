@@ -1,2 +1,2 @@
 # pymeasware
-Library to control measuring instruments 
+Library to control measuring instruments
