@@ -1,5 +1,5 @@
 from typing import Dict, Type
-from .pymeasware import Generic
+from .base import Generic
 from .powermeter import KeysightU2004A
 from .signalgenerator import HP8694B
 
