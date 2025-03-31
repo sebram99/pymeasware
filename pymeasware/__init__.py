@@ -1,31 +1,32 @@
 from .pymeasware import Generic
-from .powermeter  import KeysightU2004B
-from .signalgenerator import HP8694B
+from .instrument_factory import InstrumentFactory
 import pyvisa
 
-class Instrument:
+__all__ = ['Generic', 'KeysightU2004A', 'HP8694B', 'InstrumentFactory', 'Instrument']
 
+class Instrument:
     @staticmethod
-    def create_instrument(instrument_type, resource_name):
-        if instrument_type == "KeysightU2004B":
-            return KeysightU2004B(resource_name)
-        elif instrument_type == "HP8694B":
-            return HP8694B(resource_name)
-        else:
-            return None
+    def create_instrument(instrument_type: str, resource_name: str) -> Generic:
+        """Create an instrument instance using the factory."""
+        return InstrumentFactory.create_instrument(instrument_type, resource_name)
 
     @staticmethod
     def find_instruments():
         rm = pyvisa.ResourceManager()
-        resources = rm.list_resources()
+        all_resources = rm.list_resources()
+        # Filter for USB and GPIB resources
+        resources = [resource for resource in all_resources 
+                    if resource.startswith(('USB', 'GPIB'))]
         instruments = {}
 
         for resource in resources:
             try:
                 instr = rm.open_resource(resource)
+                instr.timeout = 1000
                 idn = instr.query('*IDN?')
-                instruments[resource] = idn
+                manufacturer = idn.split(',')[1].strip()
+                instruments[manufacturer] = resource
             except Exception as e:
-                instruments[resource] = str(e)
+                pass
 
         return instruments

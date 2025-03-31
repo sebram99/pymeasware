@@ -1,6 +1,7 @@
 from .powermeter import PowerMeter
+import pyvisa
 
-class KeysightU2004B(PowerMeter):
+class KeysightU2004A(PowerMeter):
     def __init__(self, resource_name):
         super().__init__("Power Meter", resource_name)
         self.resource_manager = resource_name
@@ -15,7 +16,9 @@ class KeysightU2004B(PowerMeter):
         return "Calibration successful"
 
     def get_info(self):
-        return "Keysight U2004B Power Meter"
+        rm = pyvisa.ResourceManager()
+        instr = rm.open_resource(self.resource_manager)
+        return instr.query('*IDN?')
 
     def reset(self):
         return "Reset successful"
